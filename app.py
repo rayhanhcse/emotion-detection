@@ -1,5 +1,5 @@
 import streamlit as st
-import cv2
+#import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
@@ -74,3 +74,4 @@ else:
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
         st.image(frame, channels="RGB")
+
