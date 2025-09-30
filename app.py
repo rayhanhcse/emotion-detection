@@ -8,7 +8,7 @@ import tempfile
 # -----------------------------
 # মডেল লোড
 # -----------------------------
-model = load_model("emotion.h5")
+model = load_model("emotion_new.h5" )
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 emotion_labels =  ['Angry','Happy','Neutral','Sad','Surprise']
 
@@ -74,4 +74,5 @@ else:
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
         st.image(frame, channels="RGB")
+
 
