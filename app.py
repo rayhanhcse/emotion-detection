@@ -6,7 +6,7 @@ from PIL import Image
 import os
 import urllib.request
 
-st.set_page_config(page_title="Face Emotion Detection", layout="centered")
+st.set_page_config(page_title="RH-FED", layout="centered")
 
 # ------------------------------
 # Load Haar Cascade
@@ -79,3 +79,4 @@ else:
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
         st.image(frame, channels="RGB")
+
