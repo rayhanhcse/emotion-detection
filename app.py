@@ -7,7 +7,7 @@ import os
 import urllib.request
 import time
 
-st.set_page_config(page_title="Real-time Face Emotion Detection By Rayhan Hussain", layout="centered")
+st.set_page_config(page_title="Face Emotion Detection", layout="centered")
 
 # -----------------------------
 # Load Haar Cascade
@@ -28,22 +28,68 @@ emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title("Real-time Face Emotion Detection")
-st.write("Webcam mode: Detect emotions in real-time!")
+st.title("Face Emotion Detection Web App")
+st.write("Choose a mode to detect emotions: Webcam or Upload Image")
 
 # -----------------------------
-# Webcam Real-time Prediction
+# Two buttons for mode selection
 # -----------------------------
-FRAME_WINDOW = st.image([])  # Placeholder for webcam frames
-run = st.checkbox('Start Webcam')
+col1, col2 = st.columns(2)
+use_webcam = col1.button("Open Webcam")
+use_upload = col2.button("Upload Image")
 
-while run:
-    # Capture image from Streamlit webcam
-    uploaded_image = st.camera_input("Capture your face")
-    
-    if uploaded_image is not None:
-        image = Image.open(uploaded_image).convert('RGB')
+# -----------------------------
+# Webcam Real-time Detection
+# -----------------------------
+if use_webcam:
+    st.write("**Webcam Mode: Real-time Face Emotion Detection**")
+    FRAME_WINDOW = st.image([])  # Placeholder for webcam frames
+    run = st.checkbox('Start Webcam')
+
+    while run:
+        # Capture image from webcam
+        uploaded_image = st.camera_input("Capture your face")
+        if uploaded_image is not None:
+            image = Image.open(uploaded_image).convert('RGB')
+            frame = np.array(image)
+
+            gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+            faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+            for (x, y, w, h) in faces:
+                roi = gray[y:y+h, x:x+w]
+                roi = cv2.resize(roi, (48,48))
+                roi = roi.reshape(1,48,48,1)/255.0
+                prediction = model.predict(roi)
+                emotion = emotion_labels[np.argmax(prediction)]
+
+                cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
+                cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
+
+            FRAME_WINDOW.image(frame, channels="RGB")
+        time.sleep(0.2)
+
+# -----------------------------
+# Upload Image Detection
+# -----------------------------
+elif use_upload:
+    st.write("**Upload Image Mode: Face Emotion Detection**")
+    uploaded_file = st.file_uploader("Upload an image", type=["jpg","jpeg","png"])
+    if uploaded_file:
+        image = Image.open(uploaded_file).convert('RGB')
         frame = np.array(image)
 
-        # Convert to grayscale for face detection
-        gray = cv2.c
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        for (x, y, w, h) in faces:
+            roi = gray[y:y+h, x:x+w]
+            roi = cv2.resize(roi, (48,48))
+            roi = roi.reshape(1,48,48,1)/255.0
+            prediction = model.predict(roi)
+            emotion = emotion_labels[np.argmax(prediction)]
+
+            cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
+            cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
+
+        st.image(frame, channels="RGB")
