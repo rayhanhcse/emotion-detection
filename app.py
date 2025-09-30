@@ -33,20 +33,16 @@ st.write("Use Webcam or Upload Image to detect emotions")
 mode = st.sidebar.selectbox("Select Mode", ["Webcam", "Upload Image"])
 
 # ------------------------------
-# Webcam Mode using camera_input
+# Webcam Mode (single frame)
 # ------------------------------
 if mode == "Webcam":
-    st.write("Automatic Webcam Detection (Real-time)")
-    FRAME_WINDOW = st.image([])
-    cap = cv2.VideoCapture(0)
+    st.write("Capture your face for emotion detection")
+    uploaded_image = st.camera_input("Click to capture")
+    if uploaded_image:
+        image = Image.open(uploaded_image)
+        frame = np.array(image.convert('RGB'))
 
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            st.warning("Webcam not accessible")
-            break
-
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
         for (x, y, w, h) in faces:
@@ -59,7 +55,7 @@ if mode == "Webcam":
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
-        FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        st.image(frame, channels="RGB")
 
 # ------------------------------
 # Upload Image Mode
@@ -86,7 +82,7 @@ else:
         st.image(frame, channels="RGB")
 
 # ------------------------------
-# Footer: Fixed Copyright at bottom center
+# Footer: Copyright at bottom center
 # ------------------------------
 st.markdown(
     """
