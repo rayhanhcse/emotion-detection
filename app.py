@@ -36,25 +36,30 @@ mode = st.sidebar.selectbox("Select Mode", ["Webcam", "Upload Image"])
 # Webcam Mode using camera_input
 # ------------------------------
 if mode == "Webcam":
-    uploaded_image = st.camera_input("Capture an image")
-    if uploaded_image:
-        image = Image.open(uploaded_image)
-        frame = np.array(image.convert('RGB'))
+    st.write("Automatic Webcam Detection (Real-time)")
+    FRAME_WINDOW = st.image([])
+    cap = cv2.VideoCapture(0)
 
-        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            st.warning("Webcam not accessible")
+            break
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
         for (x, y, w, h) in faces:
             roi = gray[y:y+h, x:x+w]
             roi = cv2.resize(roi, (48,48))
             roi = roi.reshape(1,48,48,1)/255.0
-            prediction = model.predict(roi)
+            prediction = model.predict(roi, verbose=0)
             emotion = emotion_labels[np.argmax(prediction)]
 
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
-        st.image(frame, channels="RGB")
+        FRAME_WINDOW.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
 
 # ------------------------------
 # Upload Image Mode
@@ -72,7 +77,7 @@ else:
             roi = gray[y:y+h, x:x+w]
             roi = cv2.resize(roi, (48,48))
             roi = roi.reshape(1,48,48,1)/255.0
-            prediction = model.predict(roi)
+            prediction = model.predict(roi, verbose=0)
             emotion = emotion_labels[np.argmax(prediction)]
 
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
@@ -80,3 +85,26 @@ else:
 
         st.image(frame, channels="RGB")
 
+# ------------------------------
+# Footer: Fixed Copyright at bottom center
+# ------------------------------
+st.markdown(
+    """
+    <style>
+    .footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        color: gray;
+        font-size: 12px;
+        padding: 5px;
+    }
+    </style>
+    <div class="footer">
+        Copyright © 2025 | Rayhan Hussain - All Rights Reserved
+    </div>
+    """,
+    unsafe_allow_html=True
+)
