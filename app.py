@@ -5,12 +5,11 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import os
 import urllib.request
-import time
 
-st.set_page_config(page_title="রিয়েল-টাইম ফেস ইমোশন ডিটেকশন", layout="centered")
+st.set_page_config(page_title="Face Emotion Detection", layout="centered")
 
 # -----------------------------
-# Haar Cascade লোড
+# Load Haar Cascade
 # -----------------------------
 cascade_file = "haarcascade_frontalface_default.xml"
 if not os.path.exists(cascade_file):
@@ -20,27 +19,31 @@ if not os.path.exists(cascade_file):
 face_cascade = cv2.CascadeClassifier(cascade_file)
 
 # -----------------------------
-# Keras মডেল লোড
+# Load Keras Model
 # -----------------------------
 model = load_model("emotion_new.h5", compile=False)
-emotion_labels = ['রাগ', 'খুশি', 'নিরপেক্ষ', 'দুঃখ', 'অবাক']
+emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
 
 # -----------------------------
 # Streamlit UI
 # -----------------------------
-st.title("রিয়েল-টাইম ফেস ইমোশন ডিটেকশন")
-st.write("ওয়েবক্যাম ব্যবহার করে মুখের অভিব্যক্তি সনাক্ত করুন।")
+st.title("Face Emotion Detection Web App")
+st.write("Select a mode to detect emotions: Webcam or Upload Image.")
 
 # -----------------------------
-# ওয়েবক্যাম মোড
+# Two buttons for mode selection
 # -----------------------------
-FRAME_WINDOW = st.image([])
-run = st.checkbox('ওয়েবক্যাম চালু করুন')
+col1, col2 = st.columns(2)
+use_webcam = col1.button("Use Webcam")
+use_upload = col2.button("Upload Image")
 
-while run:
-    # Streamlit ক্যামেরা থেকে ছবি নিন
-    uploaded_image = st.camera_input("আপনার মুখ ক্যাপচার করুন")
-    if uploaded_image is not None:
+# -----------------------------
+# Webcam Mode
+# -----------------------------
+if use_webcam:
+    FRAME_WINDOW = st.image([])
+    uploaded_image = st.camera_input("Capture your face")
+    if uploaded_image:
         image = Image.open(uploaded_image).convert('RGB')
         frame = np.array(image)
 
@@ -57,8 +60,28 @@ while run:
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
             cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
-        # ছবিটি আপডেট করুন
         FRAME_WINDOW.image(frame, channels="RGB")
 
-    # হালকা বিলম্ব → smoother আপডেট
-    time.sleep(0.1)
+# -----------------------------
+# Upload Image Mode
+# -----------------------------
+elif use_upload:
+    uploaded_file = st.file_uploader("Upload an image", type=["jpg","jpeg","png"])
+    if uploaded_file:
+        image = Image.open(uploaded_file).convert('RGB')
+        frame = np.array(image)
+
+        gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+
+        for (x, y, w, h) in faces:
+            roi = gray[y:y+h, x:x+w]
+            roi = cv2.resize(roi, (48,48))
+            roi = roi.reshape(1,48,48,1)/255.0
+            prediction = model.predict(roi)
+            emotion = emotion_labels[np.argmax(prediction)]
+
+            cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
+            cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
+
+        st.image(frame, channels="RGB")
