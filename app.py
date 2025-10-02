@@ -10,7 +10,7 @@ import time
 # ------------------------------
 # Page Config
 # ------------------------------
-st.set_page_config(page_title="RH-FED | Emotion Detector", layout="wide", page_icon="😊")
+st.set_page_config(page_title="RH-FED", layout="wide", page_icon="😊")
 
 # ------------------------------
 # Custom CSS for Beautiful UI
@@ -143,8 +143,8 @@ emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
 # ------------------------------
 # App Title
 # ------------------------------
-st.markdown("<div class='title'>😊 Advanced Emotion Detection</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>AI-Powered | Real-time Emotion Recognition | By Rayhan Hussain</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>😊 Welcome to Emotion World!</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Dropdown for Mode Selection
@@ -212,3 +212,4 @@ st.markdown("""
         © 2025 | RH-FED | Developed by Rayhan Hussain | All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
