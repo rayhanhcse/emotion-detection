@@ -127,7 +127,6 @@ st.markdown("<div class='navbar'>Face Emotion Detector | See Your Emotion & Enjo
 
 # ------------------------------
 # Sidebar Info & Social Links
-# ------------------------------
 st.sidebar.title("ℹ️ About App")
 st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. Detect emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning.")
 st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
@@ -135,21 +134,62 @@ st.sidebar.markdown("---")
 st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
 st.sidebar.markdown("---")
 st.sidebar.markdown("🔗 **Connect with Me:**", unsafe_allow_html=True)
+
 st.sidebar.markdown("""
-    <div style="text-align: center; font-size: 16px;">
-        <a href="https://www.facebook.com/Rayhanhcse" target="_blank" style="margin: 5px; text-decoration: none;"> 
+    <style>
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white !important;
+            font-weight: bold;
+            width: 180px;
+            transition: 0.3s ease;
+        }
+        .social-btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        .facebook { background: #3b5998; }
+        .facebook:hover { background: #2d4373; transform: scale(1.05); }
+
+        .instagram { background: #E1306C; }
+        .instagram:hover { background: #C13584; transform: scale(1.05); }
+
+        .linkedin { background: #0077B5; }
+        .linkedin:hover { background: #005983; transform: scale(1.05); }
+
+        .github { background: #333; }
+        .github:hover { background: #555; transform: scale(1.05); }
+
+        .social-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+
+    <div class="social-container">
+        <a href="https://www.facebook.com/Rayhanhcse" target="_blank" class="social-btn facebook">
             <i class="fab fa-facebook-square"></i> Facebook
-        </a><br>
-        <a href="https://www.instagram.com/Rayhanhcse" target="_blank" style="margin: 5px; text-decoration: none;"> 
+        </a>
+        <a href="https://www.instagram.com/Rayhanhcse" target="_blank" class="social-btn instagram">
             <i class="fab fa-instagram"></i> Instagram
-        </a><br>
-        <a href="https://www.linkedin.com/in/Rayhanhcse" target="_blank" style="margin: 5px; text-decoration: none;"> 
+        </a>
+        <a href="https://www.linkedin.com/in/Rayhanhcse" target="_blank" class="social-btn linkedin">
             <i class="fab fa-linkedin"></i> LinkedIn
-        </a><br>
-        <a href="https://github.com/Rayhanhcse" target="_blank" style="margin: 5px; text-decoration: none;"> 
+        </a>
+        <a href="https://github.com/Rayhanhcse" target="_blank" class="social-btn github">
             <i class="fab fa-github-square"></i> GitHub
         </a>
     </div>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 """, unsafe_allow_html=True)
 
@@ -279,4 +319,5 @@ st.markdown("""
       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
 
