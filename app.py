@@ -79,7 +79,7 @@ st.markdown("<div class='navbar'>Welcome to Emotion World!</div>", unsafe_allow_
 # Sidebar with social links
 st.sidebar.title("ℹ️ About App")
 st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. Detect emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning.")
-st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
+#st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 st.sidebar.markdown("---")
 st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
 st.sidebar.markdown("---")
@@ -93,7 +93,7 @@ st.sidebar.markdown("""
 <a href="https://github.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#333; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-github-square"></i> GitHub</a>
 </div>
 """, unsafe_allow_html=True)
-
+st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 # ------------------------------
 # Load Haar Cascade
 cascade_file = "haarcascade_frontalface_default.xml"
@@ -197,4 +197,5 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
+
 
