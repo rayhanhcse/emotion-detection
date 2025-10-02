@@ -314,8 +314,6 @@ if st.session_state.history:
 # ------------------------------
 # Footer
 # ------------------------------
-# Footer
-# ------------------------------
 st.markdown("""
     <style>
         .footer {
@@ -327,16 +325,18 @@ st.markdown("""
             color: #666;
             font-size: 13px;
             padding: 12px;
-            background: rgba(250, 250, 250, 0.8);  /* Transparent */
-            border-top: 1px solid rgba(200, 200, 200, 0.5);
+            background: rgba(250, 250, 250, 0.5);  /* More transparent */
+            border-top: 1px solid rgba(200, 200, 200, 0.3);
             box-shadow: 0px -4px 12px rgba(0,0,0,0.1); /* Soft shadow */
-            backdrop-filter: blur(6px); /* Blur background for glass effect */
+            backdrop-filter: blur(6px); /* Glass-like blur */
         }
     </style>
     <div class="footer">
       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
+
 
 
 
