@@ -73,7 +73,7 @@ body {
 
 # ------------------------------
 # Navbar
-st.markdown("<div class='navbar'>Face Emotion Detector | See Your Emotion & Enjoy !</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>Welcome to Emotion World!</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Sidebar with social links
@@ -117,7 +117,7 @@ quotes = {
 
 # ------------------------------
 # App Title
-st.markdown("<div class='title'>Welcome to Emotion World!</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy !</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
@@ -197,3 +197,4 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
+
