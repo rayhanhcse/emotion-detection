@@ -17,15 +17,15 @@ st.set_page_config(page_title="RH-FED | Emotion Detector", layout="wide", page_i
 # ------------------------------
 st.markdown("""
     <style>
-    /* Global */
+    /* Global Background */
     body {
-        background: linear-gradient(135deg, #eef2f3, #ffffff);
+        background: linear-gradient(135deg, #f8f9fa, #ecf0f1);
         font-family: 'Segoe UI', sans-serif;
     }
     /* Navbar */
     .navbar {
         width: 100%;
-        padding: 15px;
+        padding: 18px;
         background: linear-gradient(90deg, #2c3e50, #3498db);
         color: white;
         font-size: 22px;
@@ -37,7 +37,7 @@ st.markdown("""
     /* Title & Subtitle */
     .title {
         text-align: center;
-        font-size: 42px;
+        font-size: 40px;
         font-weight: bold;
         color: #2c3e50;
         margin-top: 25px;
@@ -46,16 +46,16 @@ st.markdown("""
     .subtitle {
         text-align: center;
         font-size: 18px;
-        color: #666;
-        margin-bottom: 40px;
+        color: #444;
+        margin-bottom: 35px;
         animation: fadeIn 2.5s;
     }
-    /* Cards */
+    /* Cards & Inputs */
     .stSelectbox, .stFileUploader, .stCameraInput {
-        background: rgba(255,255,255,0.6) !important;
+        background: rgba(255,255,255,0.75) !important;
         padding: 15px;
         border-radius: 12px !important;
-        box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
         backdrop-filter: blur(10px);
     }
     /* Buttons */
@@ -65,13 +65,27 @@ st.markdown("""
         font-weight: bold;
         border: none;
         border-radius: 12px;
-        padding: 12px 25px;
+        padding: 12px 28px;
         transition: 0.3s ease;
     }
     .stButton>button:hover {
         background: linear-gradient(135deg, #2980b9, #27ae60);
         transform: scale(1.05);
         cursor: pointer;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    }
+    /* Result Box */
+    .result-box {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        background: rgba(52, 152, 219, 0.1);
+        border: 1px solid #3498db;
+        color: #2c3e50;
+        font-weight: bold;
+        text-align: center;
+        font-size: 20px;
+        animation: fadeIn 1.5s;
     }
     /* Footer */
     .footer {
@@ -80,7 +94,7 @@ st.markdown("""
         bottom: 0;
         width: 100%;
         text-align: center;
-        color: #888;
+        color: #666;
         font-size: 13px;
         padding: 12px;
         background: rgba(250, 250, 250, 0.95);
@@ -94,6 +108,13 @@ st.markdown("""
     @keyframes fadeInDown {
         from { opacity: 0; transform: translateY(-20px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+        .title { font-size: 28px; }
+        .subtitle { font-size: 14px; }
+        .stButton>button { padding: 10px 20px; font-size: 14px; }
+        .navbar { font-size: 18px; }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -136,18 +157,19 @@ mode = st.selectbox("🎯 Choose Mode", ["Webcam", "Upload Image"])
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
+    detected_emotion = None
 
     for (x, y, w, h) in faces:
         roi = gray[y:y+h, x:x+w]
         roi = cv2.resize(roi, (48, 48))
         roi = roi.reshape(1, 48, 48, 1) / 255.0
         prediction = model.predict(roi, verbose=0)
-        emotion = emotion_labels[np.argmax(prediction)]
+        detected_emotion = emotion_labels[np.argmax(prediction)]
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), (52, 152, 219), 2)
-        cv2.putText(frame, emotion, (x, y-10),
+        cv2.putText(frame, detected_emotion, (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (231, 76, 60), 2)
-    return frame
+    return frame, detected_emotion
 
 # ------------------------------
 # Webcam Mode
@@ -161,8 +183,10 @@ if mode == "Webcam":
             time.sleep(1.2)
             image = Image.open(uploaded_image)
             frame = np.array(image.convert('RGB'))
-            processed = detect_and_predict(frame)
+            processed, emotion = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
+            if emotion:
+                st.markdown(f"<div class='result-box'>😀 Detected Emotion: <b>{emotion}</b></div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Upload Mode
@@ -175,8 +199,10 @@ elif mode == "Upload Image":
             time.sleep(1.2)
             image = Image.open(uploaded_file)
             frame = np.array(image.convert('RGB'))
-            processed = detect_and_predict(frame)
+            processed, emotion = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
+            if emotion:
+                st.markdown(f"<div class='result-box'>😀 Detected Emotion: <b>{emotion}</b></div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Footer
