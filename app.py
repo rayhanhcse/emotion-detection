@@ -10,7 +10,7 @@ import time
 # ------------------------------
 # Page Config
 # ------------------------------
-st.set_page_config(page_title="RH-FED", layout="wide", page_icon="😊")
+st.set_page_config(page_title="RH | EMOTION DETECTOR", layout="wide", page_icon="😊")
 
 # ------------------------------
 # Custom CSS for Beautiful UI
@@ -122,7 +122,7 @@ st.markdown("""
 # ------------------------------
 # Navbar
 # ------------------------------
-st.markdown("<div class='navbar'>🤖 RH-FED | AI Face Emotion Detector</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>RH-FED | AI Face Emotion Detector</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Load Haar Cascade
@@ -212,5 +212,6 @@ st.markdown("""
        Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
 
 
