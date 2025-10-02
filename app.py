@@ -209,7 +209,8 @@ elif mode == "Upload Image":
 # ------------------------------
 st.markdown("""
     <div class="footer">
-        © 2025 | RH-FED | Developed by Rayhan Hussain | All Rights Reserved
+       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
 
