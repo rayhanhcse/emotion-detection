@@ -13,7 +13,7 @@ import time
 st.set_page_config(page_title="RH | EMOTION DETECTOR", layout="wide", page_icon="😊")
 
 # ------------------------------
-# Custom CSS for Beautiful UI
+# Custom CSS
 # ------------------------------
 st.markdown("""
     <style>
@@ -71,6 +71,23 @@ st.markdown("""
         font-size: 22px;
         animation: fadeIn 1.5s;
     }
+    /* Alert Box for No Face Detected */
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+        40% {transform: translateY(-10px);}
+        60% {transform: translateY(-5px);}
+    }
+    .alert-box {
+        background: #f39c12;
+        color: white;
+        font-weight: bold;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 20px;
+        animation: bounce 1s ease infinite;
+        font-size: 18px;
+    }
     /* Footer */
     .footer {
         position: fixed;
@@ -84,28 +101,42 @@ st.markdown("""
         background: rgba(250, 250, 250, 0.95);
         border-top: 1px solid #ddd;
     }
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    /* Responsive */
+    @media (max-width: 768px) {
+        .title { font-size: 28px; }
+        .subtitle { font-size: 14px; }
+        .stButton>button { padding: 10px 20px; font-size: 14px; }
+        .navbar { font-size: 18px; }
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------
 # Navbar
 # ------------------------------
-st.markdown("<div class='navbar'>RH-FED | Face Emotion Detector | Artificial Intelligence | See Your Emotion & Enjoy</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>RH-FED | Face Emotion Detector | AI-Powered Fun</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Sidebar Info
+# Sidebar Info & Social Links
 # ------------------------------
 st.sidebar.title("ℹ️ About App")
-st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. It detects emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning (CNN).")
+st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. Detect emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning.")
 st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 st.sidebar.markdown("---")
 st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
-# Social Media Links in Sidebar
-# ------------------------------
 st.sidebar.markdown("---")
 st.sidebar.markdown("🔗 **Connect with Me:**", unsafe_allow_html=True)
 st.sidebar.markdown("""
-    <div style="text-align: center; font-size: 18px;">
+    <div style="text-align: center; font-size: 16px;">
         <a href="https://www.facebook.com/Rayhanhcse" target="_blank" style="margin: 5px; text-decoration: none;"> 
             <i class="fab fa-facebook-square"></i> Facebook
         </a><br>
@@ -129,7 +160,6 @@ cascade_file = "haarcascade_frontalface_default.xml"
 if not os.path.exists(cascade_file):
     url = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
     urllib.request.urlretrieve(url, cascade_file)
-
 face_cascade = cv2.CascadeClassifier(cascade_file)
 
 # ------------------------------
@@ -164,7 +194,7 @@ st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe
 mode = st.selectbox("🎯 Choose Mode", ["Webcam", "Upload Image"])
 
 # ------------------------------
-# Function for Prediction
+# Detect & Predict Function
 # ------------------------------
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
@@ -180,13 +210,14 @@ def detect_and_predict(frame):
         idx = np.argmax(prediction)
         detected_emotion = emotion_labels[idx]
         confidence = float(np.max(prediction) * 100)
-
         cv2.rectangle(frame, (x, y), (x+w, y+h), (52, 152, 219), 2)
         cv2.putText(frame, detected_emotion, (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (231, 76, 60), 2)
     return frame, detected_emotion, confidence
 
-# Store last 5 emotions
+# ------------------------------
+# Emotion History
+# ------------------------------
 if "history" not in st.session_state:
     st.session_state.history = []
 
@@ -196,7 +227,6 @@ if "history" not in st.session_state:
 if mode == "Webcam":
     st.info("📸 Use your webcam to capture a photo")
     uploaded_image = st.camera_input("Click below to capture your face 👇")
-    
     if uploaded_image:
         with st.spinner("🔍 Analyzing emotions..."):
             time.sleep(1.5)
@@ -204,22 +234,20 @@ if mode == "Webcam":
             frame = np.array(image.convert('RGB'))
             processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
-
             if emotion:
                 st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
                 st.info(quotes[emotion])
-
-                # Save history
                 st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
                 if len(st.session_state.history) > 5:
                     st.session_state.history.pop(0)
+            else:
+                st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Upload Mode
 # ------------------------------
 elif mode == "Upload Image":
     uploaded_file = st.file_uploader("📂 Upload your image (jpg, jpeg, png)", type=["jpg", "jpeg", "png"])
-    
     if uploaded_file:
         with st.spinner("🔍 Detecting emotions..."):
             time.sleep(1.5)
@@ -227,18 +255,17 @@ elif mode == "Upload Image":
             frame = np.array(image.convert('RGB'))
             processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
-
             if emotion:
                 st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
                 st.info(quotes[emotion])
-
-                # Save history
                 st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
                 if len(st.session_state.history) > 5:
                     st.session_state.history.pop(0)
+            else:
+                st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Emotion History
+# Show Recent Emotions
 # ------------------------------
 if st.session_state.history:
     st.subheader("🕒 Recent Emotions")
@@ -252,5 +279,3 @@ st.markdown("""
       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
-
-
