@@ -6,7 +6,10 @@ from PIL import Image
 import os
 import urllib.request
 
-st.set_page_config(page_title="RH-FED", layout="centered")
+# ------------------------------
+# Page Config (Responsive)
+# ------------------------------
+st.set_page_config(page_title="RH-FED", layout="wide")
 
 # ------------------------------
 # Load Haar Cascade
@@ -27,17 +30,19 @@ emotion_labels = ['Angry','Happy','Neutral','Sad','Surprise']
 # ------------------------------
 # Streamlit UI
 # ------------------------------
-st.title("Face Emotion Detection Web App By Rayhan Hussain")
-st.write("Use Webcam or Upload Image to detect emotions")
+st.title("😊 Face Emotion Detection")
+st.markdown("<p style='text-align:center;'>Web App By <b>Rayhan Hussain</b></p>", unsafe_allow_html=True)
 
-mode = st.sidebar.selectbox("Select Mode", ["Webcam", "Upload Image"])
+# Dropdown for mode selection (instead of sidebar)
+mode = st.selectbox("Choose Mode", ["Webcam", "Upload Image"])
 
 # ------------------------------
 # Webcam Mode (single frame)
 # ------------------------------
 if mode == "Webcam":
-    st.write("Capture your face for emotion detection")
+    st.write("📸 Capture your face for emotion detection")
     uploaded_image = st.camera_input("Click to capture")
+
     if uploaded_image:
         image = Image.open(uploaded_image)
         frame = np.array(image.convert('RGB'))
@@ -53,15 +58,17 @@ if mode == "Webcam":
             emotion = emotion_labels[np.argmax(prediction)]
 
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
-            cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
+            cv2.putText(frame, emotion, (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
-        st.image(frame, channels="RGB")
+        st.image(frame, channels="RGB", use_container_width=True)
 
 # ------------------------------
 # Upload Image Mode
 # ------------------------------
-else:
-    uploaded_file = st.file_uploader("Upload an image", type=["jpg","jpeg","png"])
+elif mode == "Upload Image":
+    uploaded_file = st.file_uploader("📂 Upload an image", type=["jpg","jpeg","png"])
+
     if uploaded_file:
         image = Image.open(uploaded_file)
         frame = np.array(image.convert('RGB'))
@@ -77,12 +84,13 @@ else:
             emotion = emotion_labels[np.argmax(prediction)]
 
             cv2.rectangle(frame, (x,y), (x+w,y+h), (255,0,0), 2)
-            cv2.putText(frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
+            cv2.putText(frame, emotion, (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255,0,0), 2)
 
-        st.image(frame, channels="RGB")
+        st.image(frame, channels="RGB", use_container_width=True)
 
 # ------------------------------
-# Footer: Copyright at bottom center
+# Footer: Copyright
 # ------------------------------
 st.markdown(
     """
@@ -96,6 +104,7 @@ st.markdown(
         color: gray;
         font-size: 12px;
         padding: 5px;
+        background-color: #f9f9f9;
     }
     </style>
     <div class="footer">
