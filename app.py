@@ -17,10 +17,17 @@ st.set_page_config(page_title="RH | EMOTION DETECTOR", layout="wide", page_icon=
 # ------------------------------
 st.markdown("""
     <style>
-    /* Global Background */
+    /* Background with animated gradient */
     body {
-        background: linear-gradient(135deg, #f8f9fa, #ecf0f1);
+        background: linear-gradient(270deg, #f8f9fa, #ecf0f1, #dfe6e9);
+        background-size: 600% 600%;
+        animation: gradientBG 12s ease infinite;
         font-family: 'Segoe UI', sans-serif;
+    }
+    @keyframes gradientBG {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
     }
     /* Navbar */
     .navbar {
@@ -33,11 +40,12 @@ st.markdown("""
         text-align: center;
         border-radius: 0 0 15px 15px;
         animation: fadeInDown 1s;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
     }
     /* Title & Subtitle */
     .title {
         text-align: center;
-        font-size: 40px;
+        font-size: 42px;
         font-weight: bold;
         color: #2c3e50;
         margin-top: 25px;
@@ -50,41 +58,17 @@ st.markdown("""
         margin-bottom: 35px;
         animation: fadeIn 2.5s;
     }
-    /* Cards & Inputs */
-    .stSelectbox, .stFileUploader, .stCameraInput {
-        background: rgba(255,255,255,0.75) !important;
-        padding: 15px;
-        border-radius: 12px !important;
-        box-shadow: 0px 6px 20px rgba(0,0,0,0.1);
-        backdrop-filter: blur(10px);
-    }
-    /* Buttons */
-    .stButton>button {
-        background: linear-gradient(135deg, #3498db, #2ecc71);
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 28px;
-        transition: 0.3s ease;
-    }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #2980b9, #27ae60);
-        transform: scale(1.05);
-        cursor: pointer;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
-    }
     /* Result Box */
     .result-box {
         margin-top: 20px;
-        padding: 15px;
-        border-radius: 12px;
-        background: rgba(52, 152, 219, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(52, 152, 219, 0.15);
         border: 1px solid #3498db;
         color: #2c3e50;
         font-weight: bold;
         text-align: center;
-        font-size: 20px;
+        font-size: 22px;
         animation: fadeIn 1.5s;
     }
     /* Footer */
@@ -100,29 +84,22 @@ st.markdown("""
         background: rgba(250, 250, 250, 0.95);
         border-top: 1px solid #ddd;
     }
-    /* Animations */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    /* Responsive */
-    @media (max-width: 768px) {
-        .title { font-size: 28px; }
-        .subtitle { font-size: 14px; }
-        .stButton>button { padding: 10px 20px; font-size: 14px; }
-        .navbar { font-size: 18px; }
-    }
     </style>
 """, unsafe_allow_html=True)
 
 # ------------------------------
 # Navbar
 # ------------------------------
-st.markdown("<div class='navbar'>RH-FED | AI Face Emotion Detector</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>🤖 RH-FED | AI Face Emotion Detector</div>", unsafe_allow_html=True)
+
+# ------------------------------
+# Sidebar Info
+# ------------------------------
+st.sidebar.title("ℹ️ About App")
+st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. It detects emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning (CNN).")
+st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
+st.sidebar.markdown("---")
+st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
 
 # ------------------------------
 # Load Haar Cascade
@@ -139,6 +116,20 @@ face_cascade = cv2.CascadeClassifier(cascade_file)
 # ------------------------------
 model = load_model("emotion_new.h5", compile=False)
 emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
+emoji_map = {
+    "Angry": "😠",
+    "Happy": "😊",
+    "Neutral": "😐",
+    "Sad": "😢",
+    "Surprise": "😲"
+}
+quotes = {
+    "Angry": "Take a deep breath. Anger doesn't solve problems. 🌿",
+    "Happy": "Keep smiling, happiness is contagious! 🌸",
+    "Neutral": "Stay calm and balanced. ⚖️",
+    "Sad": "Every storm passes. Brighter days are ahead. 🌤️",
+    "Surprise": "Life is full of surprises, embrace them! 🎉"
+}
 
 # ------------------------------
 # App Title
@@ -158,18 +149,25 @@ def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
     detected_emotion = None
+    confidence = None
 
     for (x, y, w, h) in faces:
         roi = gray[y:y+h, x:x+w]
         roi = cv2.resize(roi, (48, 48))
         roi = roi.reshape(1, 48, 48, 1) / 255.0
         prediction = model.predict(roi, verbose=0)
-        detected_emotion = emotion_labels[np.argmax(prediction)]
+        idx = np.argmax(prediction)
+        detected_emotion = emotion_labels[idx]
+        confidence = float(np.max(prediction) * 100)
 
         cv2.rectangle(frame, (x, y), (x+w, y+h), (52, 152, 219), 2)
         cv2.putText(frame, detected_emotion, (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (231, 76, 60), 2)
-    return frame, detected_emotion
+    return frame, detected_emotion, confidence
+
+# Store last 5 emotions
+if "history" not in st.session_state:
+    st.session_state.history = []
 
 # ------------------------------
 # Webcam Mode
@@ -180,13 +178,20 @@ if mode == "Webcam":
     
     if uploaded_image:
         with st.spinner("🔍 Analyzing emotions..."):
-            time.sleep(1.2)
+            time.sleep(1.5)
             image = Image.open(uploaded_image)
             frame = np.array(image.convert('RGB'))
-            processed, emotion = detect_and_predict(frame)
+            processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
+
             if emotion:
-                st.markdown(f"<div class='result-box'>😀 Detected Emotion: <b>{emotion}</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
+                st.info(quotes[emotion])
+
+                # Save history
+                st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
+                if len(st.session_state.history) > 5:
+                    st.session_state.history.pop(0)
 
 # ------------------------------
 # Upload Mode
@@ -196,22 +201,33 @@ elif mode == "Upload Image":
     
     if uploaded_file:
         with st.spinner("🔍 Detecting emotions..."):
-            time.sleep(1.2)
+            time.sleep(1.5)
             image = Image.open(uploaded_file)
             frame = np.array(image.convert('RGB'))
-            processed, emotion = detect_and_predict(frame)
+            processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
+
             if emotion:
-                st.markdown(f"<div class='result-box'>😀 Detected Emotion: <b>{emotion}</b></div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
+                st.info(quotes[emotion])
+
+                # Save history
+                st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
+                if len(st.session_state.history) > 5:
+                    st.session_state.history.pop(0)
+
+# ------------------------------
+# Emotion History
+# ------------------------------
+if st.session_state.history:
+    st.subheader("🕒 Recent Emotions")
+    st.write(" → ".join(st.session_state.history))
 
 # ------------------------------
 # Footer
 # ------------------------------
 st.markdown("""
     <div class="footer">
-       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
+       © 2025 | RH-FED | Developed by Rayhan Hussain | All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
-
-
-
