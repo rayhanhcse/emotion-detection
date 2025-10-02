@@ -123,7 +123,7 @@ st.markdown("""
 # ------------------------------
 # Navbar
 # ------------------------------
-st.markdown("<div class='navbar'>RH-FED | Face Emotion Detector | AI-Powered Fun</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>Face Emotion Detector | See Your Emotion & Enjoy !</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Sidebar Info & Social Links
@@ -279,3 +279,4 @@ st.markdown("""
       Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
