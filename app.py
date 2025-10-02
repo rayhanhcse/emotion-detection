@@ -90,7 +90,7 @@ st.markdown("""
 # ------------------------------
 # Navbar
 # ------------------------------
-st.markdown("<div class='navbar'>🤖 RH-FED | AI Face Emotion Detector</div>", unsafe_allow_html=True)
+st.markdown("<div class='navbar'>RH-FED | Face Emotion Detector | Artificial Intelligence | See Your Emotion & Enjoy</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Sidebar Info
@@ -134,7 +134,7 @@ quotes = {
 # ------------------------------
 # App Title
 # ------------------------------
-st.markdown("<div class='title'>😊 Welcome to Emotion World!</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>Welcome to Emotion World!</div>", unsafe_allow_html=True)
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
@@ -228,6 +228,7 @@ if st.session_state.history:
 # ------------------------------
 st.markdown("""
     <div class="footer">
-       © 2025 | RH-FED | Developed by Rayhan Hussain | All Rights Reserved
+      Copyright © 2025 | Rayhan Hussain - All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
+
