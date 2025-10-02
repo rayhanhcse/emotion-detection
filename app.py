@@ -10,29 +10,42 @@ import time
 # ------------------------------
 # Page Config
 # ------------------------------
-st.set_page_config(page_title="RH-FED | Emotion Detector", layout="wide")
+st.set_page_config(page_title="RH-FED | Emotion Detector", layout="wide", page_icon="😊")
 
 # ------------------------------
-# Custom CSS for Professional Look
+# Custom CSS for Modern UI
 # ------------------------------
 st.markdown("""
     <style>
     body {
-        background-color: #fdfdfd;
+        background: linear-gradient(135deg, #f9f9f9, #eef2f3);
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .navbar {
+        width: 100%;
+        padding: 12px;
+        background: rgba(44, 62, 80, 0.95);
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 0 0 12px 12px;
+        animation: fadeInDown 1s;
     }
     .title {
         text-align: center;
-        font-size: 38px;
+        font-size: 42px;
         font-weight: bold;
         color: #2c3e50;
-        animation: fadeInDown 1s;
+        margin-top: 20px;
+        animation: fadeIn 2s;
     }
     .subtitle {
         text-align: center;
         font-size: 16px;
         color: #555;
-        margin-bottom: 30px;
-        animation: fadeIn 2s;
+        margin-bottom: 25px;
+        animation: fadeIn 2.5s;
     }
     .footer {
         position: fixed;
@@ -41,10 +54,10 @@ st.markdown("""
         width: 100%;
         text-align: center;
         color: gray;
-        font-size: 12px;
-        padding: 8px;
-        background-color: #f9f9f9;
-        border-top: 1px solid #eee;
+        font-size: 13px;
+        padding: 10px;
+        background: rgba(250, 250, 250, 0.95);
+        border-top: 1px solid #ddd;
     }
     @keyframes fadeIn {
         from { opacity: 0; }
@@ -54,8 +67,26 @@ st.markdown("""
         from { opacity: 0; transform: translateY(-20px); }
         to { opacity: 1; transform: translateY(0); }
     }
+    .stButton>button {
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        transition: 0.3s;
+    }
+    .stButton>button:hover {
+        background: linear-gradient(135deg, #2980b9, #27ae60);
+        transform: scale(1.05);
+    }
     </style>
 """, unsafe_allow_html=True)
+
+# ------------------------------
+# Navbar
+# ------------------------------
+st.markdown("<div class='navbar'>RH-FED | Face Emotion Detection</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Load Haar Cascade
@@ -76,13 +107,13 @@ emotion_labels = ['Angry', 'Happy', 'Neutral', 'Sad', 'Surprise']
 # ------------------------------
 # App Title
 # ------------------------------
-st.markdown("<div class='title'>😊 Face Emotion Detection</div>", unsafe_allow_html=True)
-st.markdown("<div class='subtitle'>Powered by Deep Learning | By Rayhan Hussain</div>", unsafe_allow_html=True)
+st.markdown("<div class='title'>😊 Advanced Emotion Detector</div>", unsafe_allow_html=True)
+st.markdown("<div class='subtitle'>Real-time AI Powered Emotion Recognition</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Dropdown for Mode Selection
+# Mode Selection
 # ------------------------------
-mode = st.selectbox("🎯 Choose Mode", ["Webcam", "Upload Image"])
+mode = st.selectbox("🎯 Choose Mode", ["Real-time Webcam", "Upload Image"])
 
 # ------------------------------
 # Function for Prediction
@@ -104,19 +135,27 @@ def detect_and_predict(frame):
     return frame
 
 # ------------------------------
-# Webcam Mode
+# Real-time Webcam Mode
 # ------------------------------
-if mode == "Webcam":
-    st.info("📸 Use your webcam and capture a photo")
-    uploaded_image = st.camera_input("Click to capture")
-    
-    if uploaded_image:
-        with st.spinner("Analyzing emotions..."):
-            time.sleep(1)  # Animation effect
-            image = Image.open(uploaded_image)
-            frame = np.array(image.convert('RGB'))
+if mode == "Real-time Webcam":
+    st.warning("🔴 Real-time emotion detection requires webcam access")
+    run = st.checkbox("Start Webcam")
+
+    if run:
+        cap = cv2.VideoCapture(0)
+        FRAME_WINDOW = st.image([])
+
+        while run:
+            ret, frame = cap.read()
+            if not ret:
+                st.error("Webcam not accessible")
+                break
+
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             processed = detect_and_predict(frame)
-            st.image(processed, channels="RGB", use_container_width=True)
+            FRAME_WINDOW.image(processed, channels="RGB", use_container_width=True)
+
+        cap.release()
 
 # ------------------------------
 # Upload Mode
@@ -125,8 +164,8 @@ elif mode == "Upload Image":
     uploaded_file = st.file_uploader("📂 Upload an image", type=["jpg", "jpeg", "png"])
     
     if uploaded_file:
-        with st.spinner("Detecting emotions..."):
-            time.sleep(1.2)  # Loading animation
+        with st.spinner("Analyzing emotions..."):
+            time.sleep(1.2)
             image = Image.open(uploaded_file)
             frame = np.array(image.convert('RGB'))
             processed = detect_and_predict(frame)
@@ -137,6 +176,6 @@ elif mode == "Upload Image":
 # ------------------------------
 st.markdown("""
     <div class="footer">
-        © 2025 | Rayhan Hussain - All Rights Reserved
+        © 2025 | RH-FED | Developed by Rayhan Hussain | All Rights Reserved
     </div>
 """, unsafe_allow_html=True)
