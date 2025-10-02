@@ -93,6 +93,7 @@ st.sidebar.markdown("""
 <a href="https://github.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#333; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-github-square"></i> GitHub</a>
 </div>
 """, unsafe_allow_html=True)
+st.sidebar.markdown("---")
 st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 # ------------------------------
 # Load Haar Cascade
@@ -197,5 +198,6 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
+
 
 
