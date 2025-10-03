@@ -42,11 +42,6 @@ body {
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite, fadeInDown 1.5s;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.navbar:hover {
-    transform: translateY(-2px);
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.35);
 }
 @keyframes gradientAnimation {
     0% {background-position: 0% 50%;}
@@ -68,6 +63,36 @@ body {
 @keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
 /* Responsive */
 @media (max-width:768px) { .title{font-size:28px;} .subtitle{font-size:14px;} .stButton>button{padding:10px 20px; font-size:14px;} .navbar{font-size:18px;} }
+/* Mode Buttons */
+.mode-buttons { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
+.mode-btn {
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+    background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
+    background-size: 300% 300%;
+    animation: gradientMove 6s ease infinite;
+}
+.mode-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+}
+.mode-btn.active {
+    border: 3px solid #fff;
+    transform: scale(1.08);
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+}
+@keyframes gradientMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -79,7 +104,6 @@ st.markdown("<div class='navbar'>Welcome to Emotion World!</div>", unsafe_allow_
 # Sidebar with social links
 st.sidebar.title("ℹ️ About App")
 st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. Detect emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning.")
-#st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 st.sidebar.markdown("---")
 st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
 st.sidebar.markdown("---")
@@ -95,6 +119,7 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
 st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
+
 # ------------------------------
 # Load Haar Cascade
 cascade_file = "haarcascade_frontalface_default.xml"
@@ -122,8 +147,29 @@ st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Mode Selection
-mode = st.selectbox("🎯 Choose Mode", ["Webcam","Upload Image"])
+# Mode Buttons
+if "mode" not in st.session_state:
+    st.session_state.mode = None
+
+col1, col2 = st.columns(2)
+with col1:
+    if st.button("📸 Use Webcam"):
+        st.session_state.mode = "Webcam"
+with col2:
+    if st.button("📂 Upload Image"):
+        st.session_state.mode = "Upload Image"
+
+# Highlight active button
+if st.session_state.mode:
+    active_css = f"""
+    <style>
+    .stButton button[title="{st.session_state.mode}"] {{
+        border: 3px solid white !important;
+        transform: scale(1.08) !important;
+    }}
+    </style>
+    """
+    st.markdown(active_css, unsafe_allow_html=True)
 
 # ------------------------------
 # Detect & Predict
@@ -150,7 +196,7 @@ if "history" not in st.session_state: st.session_state.history=[]
 
 # ------------------------------
 # Webcam Mode
-if mode=="Webcam":
+if st.session_state.mode == "Webcam":
     st.info("📸 Use your webcam to capture a photo")
     uploaded_image = st.camera_input("Click below to capture your face 👇")
     if uploaded_image:
@@ -170,7 +216,7 @@ if mode=="Webcam":
 
 # ------------------------------
 # Upload Mode
-elif mode=="Upload Image":
+elif st.session_state.mode == "Upload Image":
     uploaded_file = st.file_uploader("📂 Upload your image (jpg,jpeg,png)", type=["jpg","jpeg","png"])
     if uploaded_file:
         with st.spinner("🔍 Detecting emotions..."):
@@ -198,8 +244,3 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
-
-
-
-
-
