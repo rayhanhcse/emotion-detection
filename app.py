@@ -14,166 +14,163 @@ st.set_page_config(page_title="RH | EMOTION DETECTOR", layout="wide", page_icon=
 
 # ------------------------------
 # Custom CSS
+# ------------------------------
 st.markdown("""
 <style>
-/* ---------------------- Body & Background ---------------------- */
+/* Background with animated gradient */
 body {
-    font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(270deg, #f8f9fa, #ecf0f1, #dfe6e9);
     background-size: 600% 600%;
-    animation: gradientBG 15s ease infinite;
+    animation: gradientBG 12s ease infinite;
+    font-family: 'Segoe UI', sans-serif;
 }
 @keyframes gradientBG {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
-/* ---------------------- Navbar ---------------------- */
+/* Navbar */
 .navbar {
     width: 100%;
     padding: 20px;
     text-align: center;
-    font-size: 28px;
+    font-size: 26px;
     font-weight: bold;
-    color: #fff;
-    border-radius: 0 0 25px 25px;
+    color: white;
+    border-radius: 0 0 20px 20px;
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 400% 400%;
-    animation: gradientAnimation 20s ease infinite;
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
-    text-shadow: 2px 3px 8px rgba(0,0,0,0.3);
+    animation: gradientAnimation 15s ease infinite, fadeInDown 1.5s;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.35);
+    text-shadow: 1px 2px 6px rgba(0,0,0,0.3);
 }
 @keyframes gradientAnimation {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
-/* ---------------------- Titles ---------------------- */
+/* Title & Subtitle */
 .title {
-    text-align:center;
-    font-size:48px;
-    font-weight:bold;
-    color:#2c3e50;
-    margin-top:25px;
-    text-shadow: 2px 3px 12px rgba(0,0,0,0.2);
+    text-align: center;
+    font-size: 44px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 25px;
     animation: fadeIn 2s;
+    text-shadow: 2px 3px 8px rgba(0,0,0,0.15);
 }
 .subtitle {
-    text-align:center;
-    font-size:22px;
-    color:#555;
-    margin-bottom:35px;
+    text-align: center;
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 35px;
     animation: fadeIn 2.5s;
 }
 
-/* ---------------------- Result Box ---------------------- */
+/* Result Box */
 .result-box {
-    margin-top:20px;
-    padding:25px;
-    border-radius:20px;
-    background: rgba(52,152,219,0.25);
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(52,152,219,0.2);
     border:1px solid #3498db;
     color:#2c3e50;
     font-weight:bold;
     text-align:center;
-    font-size:24px;
+    font-size:22px;
     animation: fadeIn 1.5s;
-    box-shadow: 0px 10px 25px rgba(52,152,219,0.5);
-    backdrop-filter: blur(8px);
+    box-shadow: 0px 8px 20px rgba(52,152,219,0.4);
+    backdrop-filter: blur(6px);
 }
 
-/* ---------------------- Alert Box ---------------------- */
+/* Alert Box */
 .alert-box {
     background: linear-gradient(45deg,#f39c12,#e67e22);
     color:white;
     font-weight:bold;
-    padding:18px;
-    border-radius:18px;
+    padding:15px;
+    border-radius:15px;
     text-align:center;
     margin-top:20px;
     animation: bounce 1.5s infinite;
-    font-size:20px;
-    box-shadow: 0px 6px 20px rgba(243,156,18,0.6);
+    font-size:18px;
+    box-shadow: 0px 6px 18px rgba(243,156,18,0.5);
 }
-@keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-12px);} 60%{transform:translateY(-6px);} }
+@keyframes bounce {
+    0%,20%,50%,80%,100%{transform:translateY(0);}
+    40%{transform:translateY(-10px);}
+    60%{transform:translateY(-5px);}
+}
 
-/* ---------------------- Sidebar Social ---------------------- */
+/* Sidebar social links */
 .sidebar .stMarkdown a {
     display:block;
     margin:6px 0;
     padding:10px 15px;
-    border-radius:14px;
+    border-radius:12px;
     text-decoration:none;
     color:white !important;
     font-weight:bold;
     text-align:center;
     transition: all 0.3s ease;
-    box-shadow: 0px 5px 18px rgba(0,0,0,0.3);
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
 }
 .sidebar .stMarkdown a:hover {
-    transform: scale(1.08);
-    box-shadow: 0px 12px 28px rgba(0,0,0,0.45);
-    filter: brightness(1.2);
+    transform: scale(1.07);
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+    filter: brightness(1.1);
 }
 
-/* ---------------------- Mode Buttons ---------------------- */
-.mode-buttons { display:flex; justify-content:center; gap:25px; margin:30px 0; }
+/* Mode Buttons */
+.mode-buttons { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
 .mode-btn {
-    padding:16px 32px;
-    font-size:20px;
-    font-weight:bold;
-    border-radius:18px;
-    border:none;
-    cursor:pointer;
-    transition: all 0.4s ease;
-    color:white;
+    padding: 14px 28px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 300% 300%;
     animation: gradientMove 6s ease infinite;
-    box-shadow: 0px 8px 25px rgba(0,0,0,0.3);
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
 }
 .mode-btn:hover {
-    transform: scale(1.12);
-    box-shadow: 0px 12px 30px rgba(0,0,0,0.5);
+    transform: scale(1.08);
+    box-shadow: 0px 10px 28px rgba(0,0,0,0.35);
 }
 .mode-btn.active {
-    border: 4px solid #fff;
-    transform: scale(1.15);
-    box-shadow: 0px 14px 35px rgba(0,0,0,0.55);
+    border: 3px solid #fff;
+    transform: scale(1.1);
+    box-shadow: 0px 12px 30px rgba(0,0,0,0.45);
 }
 @keyframes gradientMove {
-    0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;}
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
 }
 
-/* ---------------------- Footer ---------------------- */
+/* Footer */
 .footer {
-    position:fixed;
-    left:0;
-    bottom:0;
-    width:100%;
-    text-align:center;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
     color:#333;
-    font-size:15px;
-    padding:16px;
-    background: rgba(255,255,255,0.8);
+    font-size:14px;
+    padding:14px;
+    background: rgba(255,255,255,0.7);
     border-top:1px solid rgba(200,200,200,0.3);
-    box-shadow:0px -6px 18px rgba(0,0,0,0.2);
+    box-shadow:0px -6px 15px rgba(0,0,0,0.2);
     backdrop-filter: blur(8px);
 }
-.footer:hover { background: rgba(255,255,255,0.95); }
-
-/* ---------------------- Animations ---------------------- */
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
-
-/* ---------------------- Responsive ---------------------- */
-@media(max-width:768px) {
-    .title{font-size:32px;}
-    .subtitle{font-size:16px;}
-    .mode-btn{padding:12px 24px; font-size:16px;}
-    .navbar{font-size:20px;}
+.footer:hover {
+    background: rgba(255,255,255,0.9);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -193,10 +190,10 @@ st.sidebar.markdown("🔗 **Connect with Me:**", unsafe_allow_html=True)
 st.sidebar.markdown("""
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <div style="display:flex; flex-direction:column; align-items:center;">
-<a href="https://www.facebook.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:12px; background:#3b5998; color:white; text-decoration:none; width:160px; text-align:center;"><i class="fab fa-facebook-square"></i> Facebook</a>
-<a href="https://www.instagram.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:12px; background:#E1306C; color:white; text-decoration:none; width:160px; text-align:center;"><i class="fab fa-instagram"></i> Instagram</a>
-<a href="https://www.linkedin.com/in/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:12px; background:#0077B5; color:white; text-decoration:none; width:160px; text-align:center;"><i class="fab fa-linkedin"></i> LinkedIn</a>
-<a href="https://github.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:12px; background:#333; color:white; text-decoration:none; width:160px; text-align:center;"><i class="fab fa-github-square"></i> GitHub</a>
+<a href="https://www.facebook.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#3b5998; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-facebook-square"></i> Facebook</a>
+<a href="https://www.instagram.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#E1306C; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-instagram"></i> Instagram</a>
+<a href="https://www.linkedin.com/in/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#0077B5; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+<a href="https://github.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#333; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-github-square"></i> GitHub</a>
 </div>
 """, unsafe_allow_html=True)
 st.sidebar.markdown("---")
@@ -229,34 +226,22 @@ st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Mode Buttons
-if "mode" not in st.session_state: st.session_state.mode = None
+# Mode Buttons with text
+if "mode" not in st.session_state:
+    st.session_state.mode = None
 
 col1, col2 = st.columns(2)
 with col1:
-    if st.button("📸 Use Webcam"):
+    st.markdown("👉 **Use your webcam for live capture**")
+    if st.button("📸 Start Webcam Detection"):
         st.session_state.mode = "Webcam"
-        st.experimental_rerun()
 with col2:
-    if st.button("📂 Upload Image"):
+    st.markdown("👉 **Upload an image from your device**")
+    if st.button("📂 Upload Image Detection"):
         st.session_state.mode = "Upload Image"
-        st.experimental_rerun()
-
-# Highlight active button
-if st.session_state.mode:
-    active_css = f"""
-    <style>
-    .stButton button[title="{st.session_state.mode}"] {{
-        border: 4px solid white !important;
-        transform: scale(1.1) !important;
-        box-shadow:0px 12px 28px rgba(255,255,255,0.6);
-    }}
-    </style>
-    """
-    st.markdown(active_css, unsafe_allow_html=True)
 
 # ------------------------------
-# Detect & Predict
+# Detect & Predict (with glowing box)
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray,1.3,5)
@@ -270,10 +255,20 @@ def detect_and_predict(frame):
         idx = np.argmax(prediction)
         detected_emotion = emotion_labels[idx]
         confidence = float(np.max(prediction)*100)
-        # Neon glowing rectangle
-        color_map = {"Angry":(255,50,50),"Happy":(50,255,50),"Neutral":(200,200,200),"Sad":(50,50,255),"Surprise":(255,255,0)}
-        cv2.rectangle(frame,(x,y),(x+w,y+h),color_map.get(detected_emotion,(255,255,255)),3)
-        cv2.putText(frame, detected_emotion,(x,y-10), cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),2)
+
+        # Glowing rectangle
+        for i in range(6, 0, -2):  
+            overlay = frame.copy()
+            cv2.rectangle(overlay,(x,y),(x+w,y+h),(52,152,219),i+4)
+            alpha = 0.25 * (i/6)
+            cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
+
+        # Solid border
+        cv2.rectangle(frame,(x,y),(x+w,y+h),(52,152,219),2)
+
+        # Shadow text + main text
+        cv2.putText(frame, detected_emotion,(x,y-10), cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),4)
+        cv2.putText(frame, detected_emotion,(x,y-10), cv2.FONT_HERSHEY_SIMPLEX,0.9,(231,76,60),2)
     return frame, detected_emotion, confidence
 
 # ------------------------------
@@ -283,7 +278,7 @@ if "history" not in st.session_state: st.session_state.history=[]
 # ------------------------------
 # Webcam Mode
 if st.session_state.mode == "Webcam":
-    st.info("📸 Use your webcam to capture a photo")
+    st.info("📸 Turn on your webcam and capture your face")
     uploaded_image = st.camera_input("Click below to capture your face 👇")
     if uploaded_image:
         with st.spinner("🔍 Analyzing emotions..."):
@@ -320,16 +315,13 @@ elif st.session_state.mode == "Upload Image":
                 st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Recent Emotions (horizontal carousel)
+# Recent Emotions
 if st.session_state.history:
     st.subheader("🕒 Recent Emotions")
-    st.markdown(
-        "<div style='display:flex; overflow-x:auto; gap:10px; padding:10px;'>"
-        + "".join([f"<div style='min-width:100px; padding:10px; border-radius:15px; background:rgba(52,152,219,0.25); text-align:center;'>{h}</div>" for h in st.session_state.history])
-        + "</div>",
-        unsafe_allow_html=True
-    )
+    st.write(" → ".join(st.session_state.history))
 
 # ------------------------------
 # Footer
-st.markdown("<div class='footer'>Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>", unsafe_allow_html=True)
+st.markdown("""
+<div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
+""", unsafe_allow_html=True)
