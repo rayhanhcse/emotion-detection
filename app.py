@@ -29,6 +29,7 @@ body {
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
 /* Navbar */
 .navbar {
     width: 100%;
@@ -48,30 +49,46 @@ body {
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
 /* Title & Subtitle */
 .title { text-align: center; font-size: 42px; font-weight: bold; color: #2c3e50; margin-top: 25px; animation: fadeIn 2s; }
 .subtitle { text-align: center; font-size: 18px; color: #444; margin-bottom: 35px; animation: fadeIn 2.5s; }
-/* Mode Buttons */
+
+/* Mode Container */
 .mode-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 50px;
     margin: 40px 0;
 }
+
+/* Mode Box with Glow */
 .mode-box {
     text-align: center;
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0px 6px 18px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
-    width: 260px;
+    padding: 30px 20px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.9);
+    box-shadow: 0px 6px 25px rgba(0,0,0,0.2);
+    border: 2px solid transparent;
+    transition: all 0.4s ease;
+    width: 280px;
 }
 .mode-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.25);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0px 12px 40px rgba(0,0,0,0.35), 0 0 25px rgba(52, 152, 219, 0.7);
+    border: 2px solid #3498db;
 }
+
+/* Mode Icons */
+.mode-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+    color: #3498db;
+    text-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+}
+
+/* Mode Button */
 .mode-btn {
     padding: 14px 28px;
     font-size: 18px;
@@ -85,27 +102,25 @@ body {
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 300% 300%;
     animation: gradientMove 6s ease infinite;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
+    box-shadow: 0px 6px 18px rgba(0,0,0,0.25);
 }
 .mode-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
-}
-.mode-btn.active {
-    border: 3px solid #fff;
     transform: scale(1.08);
-    box-shadow: 0px 12px 28px rgba(0,0,0,0.4);
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
 }
 .mode-text {
     font-size: 15px;
     margin-top: 10px;
     color: #333;
 }
+
+/* Gradient Animation */
 @keyframes gradientMove {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
 /* Footer */
 .footer { position: fixed; left: 0; bottom: 0; width: 100%; text-align: center; color:#666; font-size:13px; padding:12px; background: rgba(250,250,250,0.5); border-top:1px solid rgba(200,200,200,0.3); box-shadow:0px -4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(6px); }
 </style>
@@ -148,7 +163,7 @@ st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Mode Buttons with Description
+# Mode Selection with Icons
 if "mode" not in st.session_state:
     st.session_state.mode = None
 
@@ -158,14 +173,16 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.markdown('<div class="mode-box">', unsafe_allow_html=True)
-    if st.button("📸 Use Webcam", key="webcam_btn"):
+    st.markdown('<div class="mode-icon">📸</div>', unsafe_allow_html=True)
+    if st.button("Use Webcam", key="webcam_btn"):
         st.session_state.mode = "Webcam"
     st.markdown("<div class='mode-text'>Capture your face live using your webcam for real-time emotion detection.</div>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
     st.markdown('<div class="mode-box">', unsafe_allow_html=True)
-    if st.button("📂 Upload Image", key="upload_btn"):
+    st.markdown('<div class="mode-icon">🖼️</div>', unsafe_allow_html=True)
+    if st.button("Upload Image", key="upload_btn"):
         st.session_state.mode = "Upload Image"
     st.markdown("<div class='mode-text'>Upload a photo (jpg, jpeg, png) to detect your facial emotion instantly.</div>", unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
