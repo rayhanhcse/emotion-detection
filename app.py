@@ -242,5 +242,6 @@ if st.session_state.history:
 # ------------------------------
 # Footer
 st.markdown("""
-<div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
+<div class="footer">Copyright © 2025|Rayhan Hussain-All Rights Reserved</div>
 """, unsafe_allow_html=True)
+
