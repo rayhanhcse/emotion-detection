@@ -51,27 +51,20 @@ body {
 /* Title & Subtitle */
 .title { text-align: center; font-size: 42px; font-weight: bold; color: #2c3e50; margin-top: 25px; animation: fadeIn 2s; }
 .subtitle { text-align: center; font-size: 18px; color: #444; margin-bottom: 35px; animation: fadeIn 2.5s; }
+/* Result Box */
+.result-box { margin-top: 20px; padding: 20px; border-radius: 15px; background: rgba(52,152,219,0.15); border:1px solid #3498db; color:#2c3e50; font-weight:bold; text-align:center; font-size:22px; animation: fadeIn 1.5s; }
+/* Alert Box */
+@keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-10px);} 60%{transform:translateY(-5px);} }
+.alert-box { background: #f39c12; color:white; font-weight:bold; padding:15px; border-radius:12px; text-align:center; margin-top:20px; animation: bounce 1s ease infinite; font-size:18px; }
+/* Footer */
+.footer { position: fixed; left: 0; bottom: 0; width: 100%; text-align: center; color:#666; font-size:13px; padding:12px; background: rgba(250,250,250,0.5); border-top:1px solid rgba(200,200,200,0.3); box-shadow:0px -4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(6px); }
+/* Animations */
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+@keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
+/* Responsive */
+@media (max-width:768px) { .title{font-size:28px;} .subtitle{font-size:14px;} .stButton>button{padding:10px 20px; font-size:14px;} .navbar{font-size:18px;} }
 /* Mode Buttons */
-.mode-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    margin: 40px 0;
-}
-.mode-box {
-    text-align: center;
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(255,255,255,0.8);
-    box-shadow: 0px 6px 18px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease;
-    width: 260px;
-}
-.mode-box:hover {
-    transform: translateY(-5px);
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.25);
-}
+.mode-buttons { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
 .mode-btn {
     padding: 14px 28px;
     font-size: 18px;
@@ -81,11 +74,10 @@ body {
     cursor: pointer;
     transition: all 0.3s ease;
     color: white;
-    margin-top: 15px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 300% 300%;
     animation: gradientMove 6s ease infinite;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
 }
 .mode-btn:hover {
     transform: scale(1.05);
@@ -94,20 +86,13 @@ body {
 .mode-btn.active {
     border: 3px solid #fff;
     transform: scale(1.08);
-    box-shadow: 0px 12px 28px rgba(0,0,0,0.4);
-}
-.mode-text {
-    font-size: 15px;
-    margin-top: 10px;
-    color: #333;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
 }
 @keyframes gradientMove {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
-/* Footer */
-.footer { position: fixed; left: 0; bottom: 0; width: 100%; text-align: center; color:#666; font-size:13px; padding:12px; background: rgba(250,250,250,0.5); border-top:1px solid rgba(200,200,200,0.3); box-shadow:0px -4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(6px); }
 </style>
 """, unsafe_allow_html=True)
 
@@ -116,9 +101,23 @@ body {
 st.markdown("<div class='navbar'>Welcome to Emotion World!</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Sidebar
+# Sidebar with social links
 st.sidebar.title("ℹ️ About App")
 st.sidebar.info("This is an **AI-Powered Face Emotion Detector**. Detect emotions such as Happy, Sad, Angry, Neutral, and Surprise using Deep Learning.")
+st.sidebar.markdown("---")
+st.sidebar.write("📌 **Tips:**\n- Use a clear photo\n- Good lighting helps\n- Try smiling 😉")
+st.sidebar.markdown("---")
+st.sidebar.markdown("🔗 **Connect with Me:**", unsafe_allow_html=True)
+st.sidebar.markdown("""
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<div style="display:flex; flex-direction:column; align-items:center;">
+<a href="https://www.facebook.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#3b5998; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-facebook-square"></i> Facebook</a>
+<a href="https://www.instagram.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#E1306C; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-instagram"></i> Instagram</a>
+<a href="https://www.linkedin.com/in/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#0077B5; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-linkedin"></i> LinkedIn</a>
+<a href="https://github.com/Rayhanhcse" target="_blank" style="margin:5px; padding:8px 12px; border-radius:10px; background:#333; color:white; text-decoration:none; width:150px; text-align:center;"><i class="fab fa-github-square"></i> GitHub</a>
+</div>
+""", unsafe_allow_html=True)
+st.sidebar.markdown("---")
 st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 
 # ------------------------------
@@ -148,36 +147,37 @@ st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Mode Buttons with Description
+# Mode Buttons
 if "mode" not in st.session_state:
     st.session_state.mode = None
 
-st.markdown('<div class="mode-container">', unsafe_allow_html=True)
-
 col1, col2 = st.columns(2)
-
 with col1:
-    st.markdown('<div class="mode-box">', unsafe_allow_html=True)
-    if st.button("📸 Use Webcam", key="webcam_btn"):
+    if st.button("📸 Use Webcam"):
         st.session_state.mode = "Webcam"
-    st.markdown("<div class='mode-text'>Capture your face live using your webcam for real-time emotion detection.</div>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
 with col2:
-    st.markdown('<div class="mode-box">', unsafe_allow_html=True)
-    if st.button("📂 Upload Image", key="upload_btn"):
+    if st.button("📂 Upload Image"):
         st.session_state.mode = "Upload Image"
-    st.markdown("<div class='mode-text'>Upload a photo (jpg, jpeg, png) to detect your facial emotion instantly.</div>", unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+# Highlight active button
+if st.session_state.mode:
+    active_css = f"""
+    <style>
+    .stButton button[title="{st.session_state.mode}"] {{
+        border: 3px solid white !important;
+        transform: scale(1.08) !important;
+    }}
+    </style>
+    """
+    st.markdown(active_css, unsafe_allow_html=True)
 
 # ------------------------------
 # Detect & Predict
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray,1.3,5)
-    detected_emotion, confidence = None, None
+    detected_emotion = None
+    confidence = None
     for (x,y,w,h) in faces:
         roi = gray[y:y+h, x:x+w]
         roi = cv2.resize(roi,(48,48))
@@ -192,8 +192,7 @@ def detect_and_predict(frame):
 
 # ------------------------------
 # Emotion History
-if "history" not in st.session_state: 
-    st.session_state.history=[]
+if "history" not in st.session_state: st.session_state.history=[]
 
 # ------------------------------
 # Webcam Mode
@@ -208,12 +207,12 @@ if st.session_state.mode == "Webcam":
             processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
             if emotion:
-                st.success(f"{emoji_map[emotion]} Detected Emotion: {emotion} ({confidence:.2f}%)")
+                st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
                 st.info(quotes[emotion])
                 st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
                 if len(st.session_state.history)>5: st.session_state.history.pop(0)
             else:
-                st.error("⚠️ No face detected. Try again with better lighting!")
+                st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Upload Mode
@@ -227,12 +226,12 @@ elif st.session_state.mode == "Upload Image":
             processed, emotion, confidence = detect_and_predict(frame)
             st.image(processed, channels="RGB", use_container_width=True)
             if emotion:
-                st.success(f"{emoji_map[emotion]} Detected Emotion: {emotion} ({confidence:.2f}%)")
+                st.markdown(f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>", unsafe_allow_html=True)
                 st.info(quotes[emotion])
                 st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
                 if len(st.session_state.history)>5: st.session_state.history.pop(0)
             else:
-                st.error("⚠️ No face detected. Try again with better lighting!")
+                st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
 
 # ------------------------------
 # Recent Emotions
