@@ -29,71 +29,151 @@ body {
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
 /* Navbar */
 .navbar {
     width: 100%;
     padding: 20px;
     text-align: center;
-    font-size: 24px;
+    font-size: 26px;
     font-weight: bold;
     color: white;
-    border-radius: 0 0 15px 15px;
-    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
+    border-radius: 0 0 20px 20px;
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 400% 400%;
     animation: gradientAnimation 15s ease infinite, fadeInDown 1.5s;
+    box-shadow: 0px 8px 25px rgba(0,0,0,0.35);
+    text-shadow: 1px 2px 6px rgba(0,0,0,0.3);
 }
 @keyframes gradientAnimation {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
 /* Title & Subtitle */
-.title { text-align: center; font-size: 42px; font-weight: bold; color: #2c3e50; margin-top: 25px; animation: fadeIn 2s; }
-.subtitle { text-align: center; font-size: 18px; color: #444; margin-bottom: 35px; animation: fadeIn 2.5s; }
+.title {
+    text-align: center;
+    font-size: 44px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 25px;
+    animation: fadeIn 2s;
+    text-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+}
+.subtitle {
+    text-align: center;
+    font-size: 20px;
+    color: #555;
+    margin-bottom: 35px;
+    animation: fadeIn 2.5s;
+}
+
 /* Result Box */
-.result-box { margin-top: 20px; padding: 20px; border-radius: 15px; background: rgba(52,152,219,0.15); border:1px solid #3498db; color:#2c3e50; font-weight:bold; text-align:center; font-size:22px; animation: fadeIn 1.5s; }
+.result-box {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(52,152,219,0.2);
+    border:1px solid #3498db;
+    color:#2c3e50;
+    font-weight:bold;
+    text-align:center;
+    font-size:22px;
+    animation: fadeIn 1.5s;
+    box-shadow: 0px 8px 20px rgba(52,152,219,0.4);
+    backdrop-filter: blur(6px);
+}
+
 /* Alert Box */
-@keyframes bounce { 0%,20%,50%,80%,100%{transform:translateY(0);} 40%{transform:translateY(-10px);} 60%{transform:translateY(-5px);} }
-.alert-box { background: #f39c12; color:white; font-weight:bold; padding:15px; border-radius:12px; text-align:center; margin-top:20px; animation: bounce 1s ease infinite; font-size:18px; }
-/* Footer */
-.footer { position: fixed; left: 0; bottom: 0; width: 100%; text-align: center; color:#666; font-size:13px; padding:12px; background: rgba(250,250,250,0.5); border-top:1px solid rgba(200,200,200,0.3); box-shadow:0px -4px 12px rgba(0,0,0,0.1); backdrop-filter: blur(6px); }
-/* Animations */
-@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-@keyframes fadeInDown { from {opacity:0; transform:translateY(-20px);} to {opacity:1; transform:translateY(0);} }
-/* Responsive */
-@media (max-width:768px) { .title{font-size:28px;} .subtitle{font-size:14px;} .stButton>button{padding:10px 20px; font-size:14px;} .navbar{font-size:18px;} }
+.alert-box {
+    background: linear-gradient(45deg,#f39c12,#e67e22);
+    color:white;
+    font-weight:bold;
+    padding:15px;
+    border-radius:15px;
+    text-align:center;
+    margin-top:20px;
+    animation: bounce 1.5s infinite;
+    font-size:18px;
+    box-shadow: 0px 6px 18px rgba(243,156,18,0.5);
+}
+@keyframes bounce {
+    0%,20%,50%,80%,100%{transform:translateY(0);}
+    40%{transform:translateY(-10px);}
+    60%{transform:translateY(-5px);}
+}
+
+/* Sidebar social links */
+.sidebar .stMarkdown a {
+    display:block;
+    margin:6px 0;
+    padding:10px 15px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white !important;
+    font-weight:bold;
+    text-align:center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.25);
+}
+.sidebar .stMarkdown a:hover {
+    transform: scale(1.07);
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+    filter: brightness(1.1);
+}
+
 /* Mode Buttons */
 .mode-buttons { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
 .mode-btn {
     padding: 14px 28px;
     font-size: 18px;
     font-weight: bold;
-    border-radius: 12px;
+    border-radius: 15px;
     border: none;
     cursor: pointer;
     transition: all 0.3s ease;
     color: white;
-    box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
     background: linear-gradient(-45deg, #1abc9c, #3498db, #9b59b6, #e74c3c);
     background-size: 300% 300%;
     animation: gradientMove 6s ease infinite;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.25);
 }
 .mode-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+    transform: scale(1.08);
+    box-shadow: 0px 10px 28px rgba(0,0,0,0.35);
 }
 .mode-btn.active {
     border: 3px solid #fff;
-    transform: scale(1.08);
-    box-shadow: 0px 10px 25px rgba(0,0,0,0.4);
+    transform: scale(1.1);
+    box-shadow: 0px 12px 30px rgba(0,0,0,0.45);
 }
 @keyframes gradientMove {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
 }
+
+/* Footer */
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    color:#333;
+    font-size:14px;
+    padding:14px;
+    background: rgba(255,255,255,0.7);
+    border-top:1px solid rgba(200,200,200,0.3);
+    box-shadow:0px -6px 15px rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+}
+.footer:hover {
+    background: rgba(255,255,255,0.9);
+}
 </style>
+
 """, unsafe_allow_html=True)
 
 # ------------------------------
@@ -244,3 +324,4 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
+
