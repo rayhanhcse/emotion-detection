@@ -173,7 +173,6 @@ body {
     background: rgba(255,255,255,0.9);
 }
 </style>
-
 """, unsafe_allow_html=True)
 
 # ------------------------------
@@ -227,32 +226,22 @@ st.markdown("<div class='title'>Face Emotion Detector | See Your Emotion & Enjoy
 st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe_allow_html=True)
 
 # ------------------------------
-# Mode Buttons
+# Mode Buttons with text
 if "mode" not in st.session_state:
     st.session_state.mode = None
 
 col1, col2 = st.columns(2)
 with col1:
-    if st.button("📸 Use Webcam"):
+    st.markdown("👉 **Use your webcam for live capture**")
+    if st.button("📸 Start Webcam Detection"):
         st.session_state.mode = "Webcam"
 with col2:
-    if st.button("📂 Upload Image"):
+    st.markdown("👉 **Upload an image from your device**")
+    if st.button("📂 Upload Image Detection"):
         st.session_state.mode = "Upload Image"
 
-# Highlight active button
-if st.session_state.mode:
-    active_css = f"""
-    <style>
-    .stButton button[title="{st.session_state.mode}"] {{
-        border: 3px solid white !important;
-        transform: scale(1.08) !important;
-    }}
-    </style>
-    """
-    st.markdown(active_css, unsafe_allow_html=True)
-
 # ------------------------------
-# Detect & Predict
+# Detect & Predict (with glowing box)
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray,1.3,5)
@@ -266,7 +255,19 @@ def detect_and_predict(frame):
         idx = np.argmax(prediction)
         detected_emotion = emotion_labels[idx]
         confidence = float(np.max(prediction)*100)
+
+        # Glowing rectangle
+        for i in range(6, 0, -2):  
+            overlay = frame.copy()
+            cv2.rectangle(overlay,(x,y),(x+w,y+h),(52,152,219),i+4)
+            alpha = 0.25 * (i/6)
+            cv2.addWeighted(overlay, alpha, frame, 1 - alpha, 0, frame)
+
+        # Solid border
         cv2.rectangle(frame,(x,y),(x+w,y+h),(52,152,219),2)
+
+        # Shadow text + main text
+        cv2.putText(frame, detected_emotion,(x,y-10), cv2.FONT_HERSHEY_SIMPLEX,0.9,(255,255,255),4)
         cv2.putText(frame, detected_emotion,(x,y-10), cv2.FONT_HERSHEY_SIMPLEX,0.9,(231,76,60),2)
     return frame, detected_emotion, confidence
 
@@ -277,7 +278,7 @@ if "history" not in st.session_state: st.session_state.history=[]
 # ------------------------------
 # Webcam Mode
 if st.session_state.mode == "Webcam":
-    st.info("📸 Use your webcam to capture a photo")
+    st.info("📸 Turn on your webcam and capture your face")
     uploaded_image = st.camera_input("Click below to capture your face 👇")
     if uploaded_image:
         with st.spinner("🔍 Analyzing emotions..."):
@@ -324,4 +325,3 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
-
