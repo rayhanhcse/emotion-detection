@@ -1,5 +1,9 @@
 streamlit
-tensorflow
-opencv-python-headless==4.10.0.84
-Pillow
-numpy
+opencv-python-headless
+numpy<2
+tensorflow-cpu==2.15.0
+pillow
+streamlit-webrtc
+av
+pandas
+psutil
