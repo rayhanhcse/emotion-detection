@@ -4,7 +4,6 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from PIL import Image
 import os
-import urllib.request
 import time
 
 # ------------------------------
@@ -201,11 +200,22 @@ st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 
 # ------------------------------
 # Load Haar Cascade
-cascade_file = "haarcascade_frontalface_default.xml"
-if not os.path.exists(cascade_file):
-    url = "https://raw.githubusercontent.com/opencv/opencv/master/data/haarcascades/haarcascade_frontalface_default.xml"
-    urllib.request.urlretrieve(url, cascade_file)
+# NOTE (fix): the old version downloaded the XML from GitHub every cold start,
+# which breaks if the request fails/rate-limits, and it relied on cv2 having
+# CascadeClassifier available. The AttributeError you saw
+# ("module 'cv2' has no attribute 'CascadeClassifier'") is a classic symptom
+# of a broken/conflicting OpenCV install (e.g. both opencv-python AND
+# opencv-python-headless listed in requirements.txt), NOT a problem with this
+# code path itself. Two things fixed here:
+#   1) Use the Haar cascade file that ships inside opencv-python-headless
+#      instead of downloading it (no network dependency, no rate limits).
+#   2) Make sure your requirements.txt has ONLY opencv-python-headless listed
+#      (see note below) — that alone resolves the AttributeError.
+cascade_file = os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
 face_cascade = cv2.CascadeClassifier(cascade_file)
+if face_cascade.empty():
+    st.error("Failed to load the Haar Cascade classifier. Check your OpenCV installation.")
+    st.stop()
 
 # ------------------------------
 # Load Model
@@ -325,4 +335,3 @@ if st.session_state.history:
 st.markdown("""
 <div class="footer">Copyright © 2025 | Rayhan Hussain - All Rights Reserved</div>
 """, unsafe_allow_html=True)
-
