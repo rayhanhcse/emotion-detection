@@ -5,6 +5,9 @@ from tensorflow.keras.models import load_model
 from PIL import Image
 import os
 import time
+import threading
+import av
+from streamlit_webrtc import webrtc_streamer, VideoProcessorBase, RTCConfiguration
 
 # ------------------------------
 # Page Config
@@ -200,17 +203,10 @@ st.sidebar.success("👨‍💻 Developed by Rayhan Hussain")
 
 # ------------------------------
 # Load Haar Cascade
-# NOTE (fix): the old version downloaded the XML from GitHub every cold start,
-# which breaks if the request fails/rate-limits, and it relied on cv2 having
-# CascadeClassifier available. The AttributeError you saw
-# ("module 'cv2' has no attribute 'CascadeClassifier'") is a classic symptom
-# of a broken/conflicting OpenCV install (e.g. both opencv-python AND
-# opencv-python-headless listed in requirements.txt), NOT a problem with this
-# code path itself. Two things fixed here:
-#   1) Use the Haar cascade file that ships inside opencv-python-headless
-#      instead of downloading it (no network dependency, no rate limits).
-#   2) Make sure your requirements.txt has ONLY opencv-python-headless listed
-#      (see note below) — that alone resolves the AttributeError.
+# Uses the copy bundled inside opencv-python-headless instead of downloading it —
+# avoids network dependency/rate limits on Streamlit Cloud. Make sure requirements.txt
+# lists ONLY opencv-python-headless (not opencv-python / opencv-contrib-python too),
+# otherwise you'll get "module 'cv2' has no attribute 'CascadeClassifier'".
 cascade_file = os.path.join(cv2.data.haarcascades, "haarcascade_frontalface_default.xml")
 face_cascade = cv2.CascadeClassifier(cascade_file)
 if face_cascade.empty():
@@ -240,18 +236,23 @@ st.markdown("<div class='subtitle'>AI-Powered | By Rayhan Hussain</div>", unsafe
 if "mode" not in st.session_state:
     st.session_state.mode = None
 
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 with col1:
-    st.markdown("👉 **Use your webcam for live capture**")
-    if st.button("📸 Start Webcam Detection"):
+    st.markdown("👉 **Snapshot from your webcam**")
+    if st.button("📸 Webcam Snapshot"):
         st.session_state.mode = "Webcam"
 with col2:
     st.markdown("👉 **Upload an image from your device**")
     if st.button("📂 Upload Image Detection"):
         st.session_state.mode = "Upload Image"
+with col3:
+    st.markdown("👉 **Continuous live detection**")
+    if st.button("🎥 Live Webcam (Real-Time)"):
+        st.session_state.mode = "Live"
 
 # ------------------------------
 # Detect & Predict (with glowing box)
+# Expects an RGB frame, returns (processed_rgb_frame, emotion, confidence)
 def detect_and_predict(frame):
     gray = cv2.cvtColor(frame, cv2.COLOR_RGB2GRAY)
     faces = face_cascade.detectMultiScale(gray,1.3,5)
@@ -286,7 +287,7 @@ def detect_and_predict(frame):
 if "history" not in st.session_state: st.session_state.history=[]
 
 # ------------------------------
-# Webcam Mode
+# Webcam Snapshot Mode
 if st.session_state.mode == "Webcam":
     st.info("📸 Turn on your webcam and capture your face")
     uploaded_image = st.camera_input("Click below to capture your face 👇")
@@ -323,6 +324,73 @@ elif st.session_state.mode == "Upload Image":
                 if len(st.session_state.history)>5: st.session_state.history.pop(0)
             else:
                 st.markdown("<div class='alert-box'>⚠️ No face detected. Please try again with a clear image or better lighting!</div>", unsafe_allow_html=True)
+
+# ------------------------------
+# Live (Real-Time) Webcam Mode via streamlit-webrtc
+elif st.session_state.mode == "Live":
+    st.info("🎥 Allow camera access below for continuous live emotion detection.")
+
+    RTC_CONFIGURATION = RTCConfiguration(
+        {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+    )
+
+    class EmotionProcessor(VideoProcessorBase):
+        def __init__(self):
+            self.lock = threading.Lock()
+            self.last_emotion = None
+            self.last_confidence = None
+
+        def recv(self, frame):
+            img_bgr = frame.to_ndarray(format="bgr24")
+            img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
+
+            processed_rgb, emotion, confidence = detect_and_predict(img_rgb)
+
+            with self.lock:
+                self.last_emotion = emotion
+                self.last_confidence = confidence
+
+            out_bgr = cv2.cvtColor(processed_rgb, cv2.COLOR_RGB2BGR)
+            return av.VideoFrame.from_ndarray(out_bgr, format="bgr24")
+
+    webrtc_ctx = webrtc_streamer(
+        key="emotion-live",
+        video_processor_factory=EmotionProcessor,
+        rtc_configuration=RTC_CONFIGURATION,
+        media_stream_constraints={"video": True, "audio": False},
+        async_processing=True,
+    )
+
+    result_placeholder = st.empty()
+
+    if webrtc_ctx.state.playing:
+        last_shown = None
+        while webrtc_ctx.state.playing:
+            if webrtc_ctx.video_processor:
+                with webrtc_ctx.video_processor.lock:
+                    emotion = webrtc_ctx.video_processor.last_emotion
+                    confidence = webrtc_ctx.video_processor.last_confidence
+                if emotion:
+                    result_placeholder.markdown(
+                        f"<div class='result-box'>{emoji_map[emotion]} Detected Emotion: <b>{emotion}</b> ({confidence:.2f}%)</div>",
+                        unsafe_allow_html=True
+                    )
+                    if emotion != last_shown:
+                        st.session_state.history.append(f"{emoji_map[emotion]} {emotion}")
+                        if len(st.session_state.history) > 5:
+                            st.session_state.history.pop(0)
+                        last_shown = emotion
+                else:
+                    result_placeholder.markdown(
+                        "<div class='alert-box'>⚠️ No face detected. Center your face in the frame.</div>",
+                        unsafe_allow_html=True
+                    )
+            time.sleep(0.5)
+
+    st.caption(
+        "Note: on some networks (corporate firewalls / strict NAT) the live stream may fail to "
+        "connect with only a STUN server — a TURN server would be needed for full reliability."
+    )
 
 # ------------------------------
 # Recent Emotions
